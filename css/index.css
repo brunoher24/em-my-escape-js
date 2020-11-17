@@ -1,0 +1,35 @@
+:root {
+    --my-purple: #9c88ff;
+}
+
+body{
+    background-color: var(--my-purple);
+    min-height: 100vh;
+    margin: 0;
+    color: white;
+}
+
+h1 {
+    text-align: center;
+    margin-top: 20vh;
+}
+
+h2 {
+    margin-top: 50px;
+    text-align: center;
+}
+
+#select-level {
+    display: flex;
+    justify-content: center;
+}
+
+#select-level > * {
+    margin: 10px;
+    font-size: 30px;
+    opacity: 0.7
+}
+
+#select-level h5 {
+    margin-top: 5px;
+}
