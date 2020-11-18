@@ -1,0 +1,28 @@
+:root {
+    --my-purple: #9c88ff;
+}
+
+body {
+    overflow: hidden;
+    margin: 0;
+    max-height: 100vh;
+}
+
+h1 {
+    text-align: center;
+}
+
+#heart-ctnr {
+    width: 10vw;
+    margin: 40vh auto 0 auto;
+}
+
+.heart-icon {
+    color: var(--my-purple);
+    font-size: 10vh;
+}
+
+.pulse {
+    transition: all 0.3s linear;
+    background-color: var(--my-purple);
+}
