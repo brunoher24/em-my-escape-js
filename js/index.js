@@ -1,4 +1,6 @@
-const currentLevel = 1;
+const storage = new Storage();
+
+const currentLevel = storage.getItem('currentLevel');
 
 const $currentLevel = document.querySelector("#level-nbr");
 $currentLevel.innerText = currentLevel;
