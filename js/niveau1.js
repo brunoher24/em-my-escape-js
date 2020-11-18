@@ -14,6 +14,7 @@ class Cell_ {
         this.y = y;
         this.$htmlElt;
         this.isEmpty = true;
+        this.content;
 
         this.createDomElt($ctnr, xNbr, yNbr);
     }
@@ -63,14 +64,51 @@ class Grid_ {
  * Crée une instance de Grille spécifique au besoin du level1 (spécificités de fonctionnement)
  * 
  * @constructor
+ * @this {Player_}
+ * @param {Cell_}  cell première cellule qui constituera le 'corps' du joueur.
+ */
+class Player_ {
+    constructor(cell) {
+        this.trail = [cell];
+        cell.$htmlElt.style.backgroundColor = 'red';
+        cell.content = 'player';
+    }
+
+     // déplacement du joueur vers une nouvelle case
+     move(newCell) {
+        // newCell : nouvelle case sur laquelle le joueur veut se déplacer
+        // si la case n'existe pas, le déplacement est annulé
+        if(!newCell || newCell.content === 'player') { return; }
+
+        if(newCell.content !== 'block') {
+            const lastCell = this.trail[0];
+            lastCell.$htmlElt.style.backgroundColor = null;
+            lastCell.content = null;
+            this.trail.shift();
+        }
+
+        newCell.$htmlElt.style.backgroundColor = 'red';
+        newCell.content = 'player';
+        this.trail.push(newCell);
+    }
+
+
+}
+
+
+/**
+ * Crée une instance de Grille spécifique au besoin du level1 (spécificités de fonctionnement)
+ * 
+ * @constructor
  * @this {Grid_level1}
  * @param {Player_} player joueur à positionner dans la grille.
  */
 class Grid_level1 extends Grid_ {
     constructor(xNbr, yNbr, selector){
         super(xNbr, yNbr, selector);
-        this.player = {x: null, y: null};
+        this.player;
         this.placePlayer(xNbr, yNbr);
+        this.placeBlocks(xNbr, yNbr);
         this.addKeyListener();
     }
 
@@ -79,34 +117,31 @@ class Grid_level1 extends Grid_ {
         const yPlayer = Math.floor(yNbr / 2);
         const xPlayer = Math.floor(xNbr / 2);
         const cell = this.cells[yPlayer][xPlayer];
-        this.player.x = xPlayer;
-        this.player.y = yPlayer;
-        cell.$htmlElt.style.backgroundColor = 'black';
-        cell.isEmpty = false;
+        this.player = new Player_(cell);
     }
 
-    // déplacement du joueur vers une nouvelle case
-    movePlayer(newCell) {
-        // newCell : nouvelle case sur laquelle le joueur veut se déplacer
-        // si la case n'existe pas, le déplacement est annulé
-        if(!newCell) { return; }
-        // case actuelle sur laquelle le joueur est
-        const currentCell = this.cells[this.player.y][this.player.x];
-        currentCell.$htmlElt.style.backgroundColor = null;
-        currentCell.isEmpty = true;
-
-        newCell.$htmlElt.style.backgroundColor = 'black';
-        newCell.isEmpty = false;
-        this.player.x = newCell.x;
-        this.player.y = newCell.y;
+    placeBlocks(xNbr, yNbr) {
+        let i = 1;
+        while(i <= 4) {
+            const randX = Math.floor(Math.random() * xNbr);
+            const randY = Math.floor(Math.random() * yNbr);
+            const cell = this.cells[randY][randX];
+            if(cell.content) {
+                i--;
+            } else {
+                cell.content = 'block';
+                cell.$htmlElt.style.backgroundColor = 'black';
+            }
+            i++;
+        }
     }
 
     // initialisation des eventlisteners du clavier
     addKeyListener() {
         document.addEventListener('keyup', e => {
             let newCell;
-            const y = this.player.y;
-            const x = this.player.x;
+            const y = this.player.trail[this.player.trail.length - 1].y;
+            const x = this.player.trail[this.player.trail.length - 1].x;
             switch(e.code) {
                 case "ArrowUp" : 
                 newCell = this.cells[y - 1] && this.cells[y - 1][x];
@@ -123,7 +158,7 @@ class Grid_level1 extends Grid_ {
                 default: alert('Vous devez cliquer sur les flèches.');
             }
 
-            this.movePlayer(newCell);
+            this.player.move(newCell);
             
         });
     }
