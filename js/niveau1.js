@@ -83,7 +83,10 @@ class Player_ {
         const head = this.trail[this.trail.length - 1];
         const tail = this.trail[0];
         if(head.isHead && tail.isTail) {
-            alert('gagné !');
+            new Popup(() => {
+                window.location.href = './niveau2.html';
+            },
+            'Passer au niveau suivant');
         }
     }
 

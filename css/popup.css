@@ -1,0 +1,26 @@
+:root {
+    --my-purple: #9c88ff;
+}
+
+.popup-ctnr {
+    box-shadow: 1px 1px 6px silver;
+    width: 260px;
+    height: 140px;
+    position: fixed;
+    z-index: 2;
+    background-color: white;
+    border-radius: 7px;
+    padding: 20px;
+    top: 200px;
+    left: calc(50% - 150px);
+}
+
+.popup-ctnr button {
+    color: white;
+    background-color: var(--my-purple);
+    display: block;
+    width: 100px;
+    height: 25px;
+    border: none;
+    margin: 10px auto;
+}
