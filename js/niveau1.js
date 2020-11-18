@@ -26,6 +26,10 @@ class Cell_ {
         // de façon à ce que la grile occupe l'intégralité de la page
         this.$htmlElt.style.width = `${100 / xNbr}vw`;
         this.$htmlElt.style.height = `${100 / yNbr}vh`;
+
+        this.$htmlElt.onclick = e => {
+            console.log(this);
+        }
         $ctnr.appendChild(this.$htmlElt);
     }
     
@@ -68,28 +72,49 @@ class Grid_ {
  * @param {Cell_}  cell première cellule qui constituera le 'corps' du joueur.
  */
 class Player_ {
-    constructor(cell) {
+    constructor(cell, finishLine) {
+        this.finishLine = finishLine;
         this.trail = [cell];
         cell.$htmlElt.style.backgroundColor = 'red';
         cell.content = 'player';
+    }
+
+    testWinning() {
+        const head = this.trail[this.trail.length - 1];
+        const tail = this.trail[0];
+        if(head.isHead && tail.isTail) {
+            alert('gagné !');
+        }
     }
 
      // déplacement du joueur vers une nouvelle case
      move(newCell) {
         // newCell : nouvelle case sur laquelle le joueur veut se déplacer
         // si la case n'existe pas, le déplacement est annulé
-        if(!newCell || newCell.content === 'player') { return; }
+        if(!newCell || newCell.content === 'player') { 
+            return; 
+        }
+
+        
 
         if(newCell.content !== 'block') {
             const lastCell = this.trail[0];
             lastCell.$htmlElt.style.backgroundColor = null;
-            lastCell.content = null;
+
+            if(lastCell.content === 'player') {
+                lastCell.content = null;
+            }
             this.trail.shift();
         }
 
         newCell.$htmlElt.style.backgroundColor = 'red';
-        newCell.content = 'player';
+        if(newCell.content !== 'finishLine') {
+            newCell.content = 'player';
+        }
+
         this.trail.push(newCell);
+        this.testWinning();
+
     }
 
 
@@ -107,7 +132,9 @@ class Grid_level1 extends Grid_ {
     constructor(xNbr, yNbr, selector){
         super(xNbr, yNbr, selector);
         this.player;
+        this.finishLine = [];
         this.placePlayer(xNbr, yNbr);
+        this.placeFinishLine(xNbr, yNbr);
         this.placeBlocks(xNbr, yNbr);
         this.addKeyListener();
     }
@@ -117,7 +144,25 @@ class Grid_level1 extends Grid_ {
         const yPlayer = Math.floor(yNbr / 2);
         const xPlayer = Math.floor(xNbr / 2);
         const cell = this.cells[yPlayer][xPlayer];
-        this.player = new Player_(cell);
+        this.player = new Player_(cell, this.finishLine);
+    }
+
+    placeFinishLine(xNbr, yNbr) {
+        const y = yNbr - 3;
+        const x = Math.floor(xNbr / 2) - 2;
+        
+        for(let i = 0; i < 5; i ++) {
+            const cell = this.cells[y][x + i];
+            cell.$htmlElt.style.border = '4px solid orange';
+            cell.content = 'finishLine';
+            if(i === 0) {
+                cell.isTail = true;
+            }
+            if(i === 4) {
+                cell.isHead = true;
+            }
+            this.finishLine.push(cell);
+        }
     }
 
     placeBlocks(xNbr, yNbr) {
