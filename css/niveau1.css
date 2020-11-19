@@ -1,5 +1,10 @@
+:root {
+    --my-purple: #9c88ff;
+}
+
 body {
     margin: 0;
+    background-color: var(--my-purple);
 }
 
 .grid-row {
@@ -7,7 +12,6 @@ body {
 }
 
 .grid-cell {
-    border: 1px solid;
     box-sizing: border-box;
 }
 

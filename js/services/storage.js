@@ -9,7 +9,7 @@ class Storage {
             // de récupérer et/ou de mofifier
             window.localStorage[this.storageName] = JSON.stringify({
                 currentLevel: 1, // niveau actuel
-                levelsCompleted: 0 // nombre de niveaux complétés
+                completedLevels: 0 // nombre de niveaux complétés
             });
         } 
     }
@@ -22,9 +22,27 @@ class Storage {
         return this.get()[prop];
     }
 
-    set(key, value) {
+    set(data) {
+        window.localStorage[this.storageName] = JSON.stringify(data);
+    }
+
+    setItem(key, value) {
         const data = this.get();
         data[key] = value;
         window.localStorage[this.storageName] = JSON.stringify(data);
+    }
+
+    winHandler(number) {
+        let data = this.get();
+        data.currentLevel = number;
+        if(data.completedLevels < data.currentLevel - 1) {
+            data.completedLevels =  data.currentLevel - 1;
+            console.log(data.completedLevels);
+        }
+        this.set(data);
+        new Popup(() => {
+            window.location.href = `./niveau${number}.html`;
+        },
+        'Passer au niveau suivant');
     }
 }

@@ -2,13 +2,14 @@ const $heart = document.querySelector('.heart-icon');
 
 let heartSize = 10;
 let increaseHeartSize = false;
-$heart.onclick = e => {
+$heart.onclick = () => {
     if(!increaseHeartSize) {
         heartSize = -20;
     }  
     heartSize = heartScale(heartSize);
 
     if(heartSize >= 160) {
+        window.clearInterval(pulseInterval);
         hasWon();
         
     }
@@ -18,18 +19,13 @@ const pulseInterval = window.setInterval(displayPulsation , 2000);
 
 
 function hasWon(){
-    window.clearInterval(pulseInterval);
-    new Popup(() => {
-        window.location.href = './niveau2.html';
-    },
-    'Passer au niveau suivant');
+    const storage = new Storage();
+    storage.winHandler(3);
 }
 
 function heartScale(size) {
     size += 30;
-    $heart.style.fontSize = `${heartSize}vh`;
-    $heart.style.marginLeft = `-${heartSize/2}vw`;
-    $heart.style.marginTop = `-${heartSize/2}vh`;
+    $heart.style.fontSize = `${size}vh`;
     return size;
 }
 

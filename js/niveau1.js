@@ -75,7 +75,7 @@ class Player_ {
     constructor(cell, finishLine) {
         this.finishLine = finishLine;
         this.trail = [cell];
-        cell.$htmlElt.style.backgroundColor = 'red';
+        cell.$htmlElt.style.backgroundColor = 'white';
         cell.content = 'player';
     }
 
@@ -83,11 +83,13 @@ class Player_ {
         const head = this.trail[this.trail.length - 1];
         const tail = this.trail[0];
         if(head.isHead && tail.isTail) {
-            new Popup(() => {
-                window.location.href = './niveau2.html';
-            },
-            'Passer au niveau suivant');
+            this.hasWon();
         }
+    }
+
+    hasWon() {
+        const storage = new Storage();
+        storage.winHandler(2)
     }
 
      // déplacement du joueur vers une nouvelle case
@@ -110,7 +112,7 @@ class Player_ {
             this.trail.shift();
         }
 
-        newCell.$htmlElt.style.backgroundColor = 'red';
+        newCell.$htmlElt.style.backgroundColor = 'white';
         if(newCell.content !== 'finishLine') {
             newCell.content = 'player';
         }
@@ -156,12 +158,15 @@ class Grid_level1 extends Grid_ {
         
         for(let i = 0; i < 5; i ++) {
             const cell = this.cells[y][x + i];
-            cell.$htmlElt.style.border = '4px solid orange';
+            cell.$htmlElt.style.borderTop = '4px solid white';
+            cell.$htmlElt.style.borderBottom = '4px solid white';
             cell.content = 'finishLine';
             if(i === 0) {
+                cell.$htmlElt.style.borderLeft = '4px solid white';
                 cell.isTail = true;
             }
             if(i === 4) {
+                cell.$htmlElt.style.borderRight = '4px solid white';
                 cell.isHead = true;
             }
             this.finishLine.push(cell);
@@ -178,7 +183,7 @@ class Grid_level1 extends Grid_ {
                 i--;
             } else {
                 cell.content = 'block';
-                cell.$htmlElt.style.backgroundColor = 'black';
+                cell.$htmlElt.style.backgroundColor = 'silver';
             }
             i++;
         }
