@@ -21,7 +21,6 @@ $playLevel.addEventListener('click', () => {
 
 const $forwardArrow = document.querySelector(".forward-arrow");
 $forwardArrow.addEventListener('click', () => {
-    console.log(data.currentLevel, data.completedLevels);
     if(data.currentLevel <= data.completedLevels) {
         data.currentLevel ++;
         $currentLevel.innerText = data.currentLevel;
